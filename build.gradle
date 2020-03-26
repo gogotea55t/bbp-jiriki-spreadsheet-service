@@ -30,6 +30,7 @@ dependencies {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
+	compileOnly 'org.projectlombok:lombok:1.18.8'
 }
 
 test {
