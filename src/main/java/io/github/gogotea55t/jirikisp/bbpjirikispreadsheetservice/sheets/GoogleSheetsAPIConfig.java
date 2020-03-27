@@ -58,13 +58,6 @@ public class GoogleSheetsAPIConfig {
     }
   }
 
-  private GoogleSpreadSheetConfig sheetConfig;
-
-  @Autowired
-  public GoogleSheetsAPIConfig(GoogleSpreadSheetConfig config) {
-    this.sheetConfig = config;
-  }
-
   public Credential authorize() throws IOException {
     InputStream in = BbpJirikiSpreadsheetServiceApplication.class.getResourceAsStream("/client_secret.json");
     GoogleClientSecrets clientSecrets =
@@ -76,7 +69,7 @@ public class GoogleSheetsAPIConfig {
             .setDataStoreFactory(new FileDataStoreFactory(new java.io.File(TOKENS_DIRECTORY_PATH)))
             .setAccessType("offline")
             .build();
-    LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
+    LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8889).build();
     return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
   }
 
@@ -85,31 +78,5 @@ public class GoogleSheetsAPIConfig {
     return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
         .setApplicationName(APPLICATION_NAME)
         .build();
-  }
-
-  public List<ValueRange> getValuesFromSpreadSheet() throws IOException {
-    Sheets service = getSheetsService();
-
-    String spreadSheetId = sheetConfig.getId();
-    String spreadSheetName = sheetConfig.getName();
-
-    BatchGet request = service.spreadsheets().values().batchGet(spreadSheetId);
-
-    List<String> ranges = new ArrayList<>();
-
-    // ユーザー定義
-    ranges.add(spreadSheetName + "!L3:4");
-
-    // 楽曲パート情報
-    ranges.add(spreadSheetName + "!A5:K");
-
-    // 得点
-    ranges.add(spreadSheetName + "!K3:1495");
-
-    request.setRanges(ranges);
-
-    BatchGetValuesResponse response = request.execute();
-
-    return response.getValueRanges();
   }
 }

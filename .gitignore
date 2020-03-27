@@ -6,6 +6,7 @@ bin/
 !**/src/main/**
 !**/src/test/**
 client_secret.json
+/tokens/
 
 ### STS ###
 .apt_generated
