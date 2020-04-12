@@ -24,24 +24,25 @@ public class RabbitMQConfiguration {
   }
   
   @Bean
-  public Queue autoDeleteQueue1() {
+  public Queue autoDeleteQueueForUpdate() {
+    return new AnonymousQueue();
+  }
+  
+  @Bean
+  public Queue autoDeleteQueueForDelete() {
     return new AnonymousQueue();
   }
 
   @Bean
-  public Queue autoDeleteQueue2() {
-    return new AnonymousQueue();
+  public Binding bindingForUpdate(TopicExchange topic, Queue autoDeleteQueueForUpdate) {
+    return BindingBuilder.bind(autoDeleteQueueForUpdate).to(topic).with("update");
   }
 
   @Bean
-  public Binding bindingForUpdate() {
-    return BindingBuilder.bind(autoDeleteQueue1()).to(topic()).with("update");
+  public Binding bindingForDelete(TopicExchange topic, Queue autoDeleteQueueForDelete) {
+    return BindingBuilder.bind(autoDeleteQueueForDelete).to(topic).with("delete");
   }
-
-  @Bean
-  public Binding bindingForDelete() {
-    return BindingBuilder.bind(autoDeleteQueue2()).to(topic()).with("delete");
-  }
+  
   @Bean
   public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
     return new Jackson2JsonMessageConverter();
