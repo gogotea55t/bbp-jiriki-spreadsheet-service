@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.model.ClearValuesRequest;
+import com.google.api.services.sheets.v4.model.ClearValuesResponse;
 import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
+import io.github.gogotea55t.jiriki.domain.request.ScoreDeleteRequest;
 import io.github.gogotea55t.jiriki.domain.request.ScoreRequest;
 import io.github.gogotea55t.jirikisp.bbpjirikispreadsheetservice.sheets.GoogleSheetsAPIConfig;
 import io.github.gogotea55t.jirikisp.bbpjirikispreadsheetservice.sheets.GoogleSpreadSheetConfig;
@@ -45,6 +48,20 @@ public class SheetService {
             .values()
             .update(SHEET_ID(), SHEET_NAME() + "!" + getA1Notation(columnNo, rowNo), values)
             .setValueInputOption("USER_ENTERED")
+            .execute();
+    System.out.println(response);
+  }
+
+  public void deleteScore(ScoreDeleteRequest request) throws Exception {
+    Sheets sheet = APIConfig.getSheetsService();
+    int columnNo = findUserColumn(request.getUserId());
+    int rowNo = findSongRow(request.getSongId());
+    ClearValuesRequest clearRequest = new ClearValuesRequest();
+    ClearValuesResponse response =
+        sheet
+            .spreadsheets()
+            .values()
+            .clear(SHEET_ID(), SHEET_NAME() + "!" + getA1Notation(columnNo, rowNo), clearRequest)
             .execute();
     System.out.println(response);
   }
