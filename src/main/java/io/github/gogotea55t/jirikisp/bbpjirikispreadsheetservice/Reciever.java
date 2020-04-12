@@ -13,7 +13,6 @@ public class Reciever {
 
   @RabbitListener(queues = "#{autoDeleteQueueForUpdate.name}")
   public void update(ScoreRequest in) {
-    System.out.println("[x] Recieved: '" + in + "'");
     try {
       sheetService.updateScore(in);
     } catch (Exception e) {
@@ -23,7 +22,6 @@ public class Reciever {
   
   @RabbitListener(queues = "#{autoDeleteQueueForDelete.name}")
   public void delete(ScoreDeleteRequest in) {
-	System.out.println("[y] Recieved: '" + in + "'");
 	try {
 	  sheetService.deleteScore(in);
 	} catch (Exception e) {
