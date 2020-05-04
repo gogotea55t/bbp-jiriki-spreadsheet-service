@@ -12,7 +12,7 @@ before_install:
   - git add -f gradle/wrapper/gradle-wrapper.jar
 
 after_success:
-  - ./gradlew test --jastpt.encryptor.password=$JASYPT_PASSWORD
+  - ./gradlew test
 
 deploy:
   skip_cleanup: true
