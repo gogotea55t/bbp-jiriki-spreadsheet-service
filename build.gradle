@@ -2,8 +2,8 @@ plugins {
 	id 'org.springframework.boot' version '2.2.5.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
-	id 'com.bmuschko.docker-remote-api'
-	id 'com.bmuschko.docker-spring-boot-application'
+	id 'com.bmuschko.docker-remote-api' version "6.4.0"
+	id 'com.bmuschko.docker-spring-boot-application' version "6.4.0"
 }
 
 group = 'io.github.gogotea55t.jiriki-sp'
@@ -19,6 +19,7 @@ configurations {
 
 repositories {
 	mavenCentral()
+	gradlePluginPortal()
 }
 
 dependencies {
