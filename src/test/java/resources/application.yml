@@ -1,0 +1,8 @@
+discord:
+  webhookurl: http://xxxxxxxxxxxx
+google:
+  sheet:
+    id: xxxxxxxxxxxxxxxxxxxxxxx
+    name: xxxxxxxxx
+server:
+  port: 8081
