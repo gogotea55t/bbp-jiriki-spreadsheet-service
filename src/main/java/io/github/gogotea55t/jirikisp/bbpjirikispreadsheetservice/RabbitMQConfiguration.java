@@ -16,19 +16,19 @@ public class RabbitMQConfiguration {
   
   @Bean
   public TopicExchange topic() {
-	return new TopicExchange(topicName, false, true);
+    return new TopicExchange(topicName, false, true);
   }
 
   @Bean
   public Reciever reciever() {
     return new Reciever();
   }
-  
+
   @Bean
   public Queue autoDeleteQueueForUpdate() {
     return new AnonymousQueue();
   }
-  
+
   @Bean
   public Queue autoDeleteQueueForDelete() {
     return new AnonymousQueue();
@@ -43,14 +43,14 @@ public class RabbitMQConfiguration {
   public Binding bindingForDelete(TopicExchange topic, Queue autoDeleteQueueForDelete) {
     return BindingBuilder.bind(autoDeleteQueueForDelete).to(topic).with("delete");
   }
-  
+
   @Bean
   public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
     return new Jackson2JsonMessageConverter();
   }
-  
+
   @Bean
   public RestTemplate restTemplate() {
-	return new RestTemplate();
+    return new RestTemplate();
   }
 }
