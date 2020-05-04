@@ -1,10 +1,14 @@
 package io.github.gogotea55t.jirikisp.bbpjirikispreadsheetservice.service;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ClearValuesRequest;
@@ -14,6 +18,9 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 
 import io.github.gogotea55t.jiriki.domain.request.ScoreDeleteRequest;
 import io.github.gogotea55t.jiriki.domain.request.ScoreRequest;
+import io.github.gogotea55t.jirikisp.bbpjirikispreadsheetservice.discord.DiscordConfiguration;
+import io.github.gogotea55t.jirikisp.bbpjirikispreadsheetservice.discord.DiscordRequest;
+import io.github.gogotea55t.jirikisp.bbpjirikispreadsheetservice.discord.DiscordRequestHeader;
 import io.github.gogotea55t.jirikisp.bbpjirikispreadsheetservice.sheets.GoogleSheetsAPIConfig;
 import io.github.gogotea55t.jirikisp.bbpjirikispreadsheetservice.sheets.GoogleSpreadSheetConfig;
 
@@ -21,11 +28,19 @@ import io.github.gogotea55t.jirikisp.bbpjirikispreadsheetservice.sheets.GoogleSp
 public class SheetService {
   private GoogleSheetsAPIConfig APIConfig;
   private GoogleSpreadSheetConfig sheetConfig;
+  private DiscordConfiguration discordConfig;
+  private RestTemplate restTemplate;
 
   @Autowired
-  public SheetService(GoogleSheetsAPIConfig APIConfig, GoogleSpreadSheetConfig sheetConfig) {
+  public SheetService(
+      GoogleSheetsAPIConfig APIConfig,
+      GoogleSpreadSheetConfig sheetConfig,
+      DiscordConfiguration discordconfig,
+      RestTemplate restTemplate) {
     this.APIConfig = APIConfig;
     this.sheetConfig = sheetConfig;
+    this.discordConfig = discordconfig;
+    this.restTemplate = restTemplate;
   }
 
   private String SHEET_ID() {
@@ -37,33 +52,57 @@ public class SheetService {
   }
 
   public void updateScore(ScoreRequest request) throws Exception {
-    Sheets sheet = APIConfig.getSheetsService();
-    int columnNo = findUserColumn(request.getUserId());
-    int rowNo = findSongRow(request.getSongId());
-    List<List<Object>> value = Arrays.asList(Arrays.asList(request.getScore().setScale(0)));
-    ValueRange values = new ValueRange().setValues(value);
-    UpdateValuesResponse response =
-        sheet
-            .spreadsheets()
-            .values()
-            .update(SHEET_ID(), SHEET_NAME() + "!" + getA1Notation(columnNo, rowNo), values)
-            .setValueInputOption("USER_ENTERED")
-            .execute();
-    System.out.println(response);
+    try {
+      Sheets sheet = APIConfig.getSheetsService();
+      int columnNo = findUserColumn(request.getUserId());
+      int rowNo = findSongRow(request.getSongId());
+      List<List<Object>> value = Arrays.asList(Arrays.asList(request.getScore().setScale(0)));
+      ValueRange values = new ValueRange().setValues(value);
+      UpdateValuesResponse response =
+          sheet
+              .spreadsheets()
+              .values()
+              .update(SHEET_ID(), SHEET_NAME() + "!" + getA1Notation(columnNo, rowNo), values)
+              .setValueInputOption("USER_ENTERED")
+              .execute();
+      System.out.println(response);
+    } catch (Exception e) {
+      HttpHeaders header = DiscordRequestHeader.requestHeader();
+      DiscordRequest discordRequest = new DiscordRequest();
+      discordRequest.setContent("スプレッドシートの更新に失敗しました。\r\n" + e.getMessage() + "\r\n" + request);
+      RequestEntity<DiscordRequest> disCordRequestEntity =
+          RequestEntity.post(URI.create(discordConfig.getWebhookurl()))
+              .headers(header)
+              .body(discordRequest);
+      Object resp = restTemplate.exchange(disCordRequestEntity, Object.class);
+      System.out.println(resp);
+    }
   }
 
   public void deleteScore(ScoreDeleteRequest request) throws Exception {
-    Sheets sheet = APIConfig.getSheetsService();
-    int columnNo = findUserColumn(request.getUserId());
-    int rowNo = findSongRow(request.getSongId());
-    ClearValuesRequest clearRequest = new ClearValuesRequest();
-    ClearValuesResponse response =
-        sheet
-            .spreadsheets()
-            .values()
-            .clear(SHEET_ID(), SHEET_NAME() + "!" + getA1Notation(columnNo, rowNo), clearRequest)
-            .execute();
-    System.out.println(response);
+    try {
+      Sheets sheet = APIConfig.getSheetsService();
+      int columnNo = findUserColumn(request.getUserId());
+      int rowNo = findSongRow(request.getSongId());
+      ClearValuesRequest clearRequest = new ClearValuesRequest();
+      ClearValuesResponse response =
+          sheet
+              .spreadsheets()
+              .values()
+              .clear(SHEET_ID(), SHEET_NAME() + "!" + getA1Notation(columnNo, rowNo), clearRequest)
+              .execute();
+      System.out.println(response);
+    } catch (Exception e) {
+      HttpHeaders header = DiscordRequestHeader.requestHeader();
+      DiscordRequest discordRequest = new DiscordRequest();
+      discordRequest.setContent("スプレッドシートの削除に失敗しました。\r\n" + e.getMessage() + "\r\n" + request);
+      RequestEntity<DiscordRequest> disCordRequestEntity =
+          RequestEntity.post(URI.create(discordConfig.getWebhookurl()))
+              .headers(header)
+              .body(discordRequest);
+      Object resp = restTemplate.exchange(disCordRequestEntity, Object.class);
+      System.out.println(resp);
+    }
   }
 
   private int findUserColumn(String userId) throws Exception {

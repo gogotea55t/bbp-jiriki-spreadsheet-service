@@ -1,0 +1,14 @@
+discord:
+  webhookurl: ENC@[4n1C84xI+xogCCBybBtjsmCIFm96zJ4RxT/f4f9xYTEyu6Rt+xu6cwAj+rQ62sEyvRGWj2aVN925/FG6BFWTk214xiqAu31TGUqyxOP1T7a/hEiCCJb3EQNa87YJh52sluUbvi32rjb9Pyi/g+PIRnNTUaPZrn3cEVmIWHktscS3zp7ppAK7tQ==]
+google:
+  sheet:
+    id: 1hC3kvvKKZItaKX2yu1Kd7xqpoFgHcu6ri5nk7c6ZTuc
+    name: 2. 得点表
+server:
+  port: 8081
+
+jasypt:
+  encryptor:
+    property:
+      prefix: "ENC@["
+      suffix: "]"

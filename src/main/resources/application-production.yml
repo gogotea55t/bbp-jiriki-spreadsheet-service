@@ -1,7 +1,16 @@
 server:
-  port: 8080
+  port: 8081
+
+jasypt:
+  encryptor:
+    property:
+      prefix: "ENC@["
+      suffix: "]"
 
 google:
   sheet:
     id: 1YBCP7kBrhCha5v8RRklTwXs0rbS437EG1yLNdwFm634
     name: 2. 得点表
+    
+discord:
+  webhookurl: ENC@[plYONRsAXh2DBrh/gvWDJYQHfp2hckcs1b8xWErotolRfu1ecUEeQcatbXSJp0ASh5l4/E/gho57wqfqdaVtOOPhjWXiYlLgYkIxO38yc0WIBVKutYvKwX6vU0EpZxUJnKdzvhdJWNeOg/y3MDln/dOcNDnylO72yEMTZALfflZ47oaeXBtbRw==]
