@@ -1,0 +1,11 @@
+version: '3'
+services:
+  app:
+    restart: always
+    container_name: bbp-jiriki-spreadsheet-sv
+    image: bbp10-jiriki.cf:5000/bbp-jiriki-spreadsheet-sv:${BBP_SV_VERSION}
+    ports:
+      - 8081:8081
+    volumes:
+      - ./tokens:/tokens
+      - ./src/main/resources/client_secret.json:/resources/client_secret.json
