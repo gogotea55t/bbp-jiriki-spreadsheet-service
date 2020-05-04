@@ -1,0 +1,7 @@
+server:
+  port: 8080
+
+google:
+  sheet:
+    id: 1YBCP7kBrhCha5v8RRklTwXs0rbS437EG1yLNdwFm634
+    name: 2. 得点表
