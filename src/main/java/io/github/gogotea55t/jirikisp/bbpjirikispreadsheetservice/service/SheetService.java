@@ -167,13 +167,14 @@ public class SheetService {
     int firstIndexAlpha = (int) 'A';
     StringBuilder sb = new StringBuilder();
     if (column < 0) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("Invalid column No. passed to getA1Notation() function.");
     } else {
       int tmp = column;
       while (tmp != 0) {
         sb.append(String.valueOf((char) (firstIndexAlpha + (tmp - 1) % 26)));
         tmp = (tmp - 1) / 26;
       }
+      sb.reverse();
     }
     return sb.append(row).toString();
   }
