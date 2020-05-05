@@ -14,3 +14,10 @@ google:
     
 discord:
   webhookurl: ENC@[plYONRsAXh2DBrh/gvWDJYQHfp2hckcs1b8xWErotolRfu1ecUEeQcatbXSJp0ASh5l4/E/gho57wqfqdaVtOOPhjWXiYlLgYkIxO38yc0WIBVKutYvKwX6vU0EpZxUJnKdzvhdJWNeOg/y3MDln/dOcNDnylO72yEMTZALfflZ47oaeXBtbRw==]
+
+spring:
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: jiriki_rabbit
+    password: ENC@[TeFG0rp0t1irX+fnG8+WmmCLQDmSqdIdPzN1hIQd0pnZjZf6vcp1fw==]
